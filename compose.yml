@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  site:
+    build:
+      dockerfile: site/dev.Dockerfile
+    stop_grace_period: 1s
+    restart: unless-stopped
+    ports:
+      - "3000"
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mcieno/marketlab/site.rule: Host(`marketlab.mcieno.internal`)
+      traefik.http.routers.mcieno/marketlab/site.tls: true
+    working_dir: /site
+    command: npm run dev
+    volumes:
+      - ./site:/site
+    environment:
+      OBSERVABLE_TELEMETRY_DISABLE: true
+      PLAYWRIGHT_BROWSERS_PATH: 0
+      SENTRY_RELEASE: SNAPSHOT
+      SENTRY_ENVIRONMENT: local
+      SENTRY_PUBLIC_KEY: ${SENTRY_PUBLIC_KEY:-example}
+
+  functions:
+    build:
+      dockerfile: site/dev.Dockerfile
+    stop_grace_period: 1s
+    restart: unless-stopped
+    ports:
+      - "8787"
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mcieno/marketlab/functions.rule: Host(`marketlab.mcieno.internal`) && PathPrefix(`/api/`)
+      traefik.http.routers.mcieno/marketlab/functions.tls: true
+    working_dir: /site
+    command: npx wrangler pages dev --ip 0.0.0.0 --port 8787 .
+    volumes:
+      - ./site:/site
+    environment:
+      SENTRY_RELEASE: SNAPSHOT
+      SENTRY_ENVIRONMENT: local

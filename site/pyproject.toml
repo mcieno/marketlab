@@ -1,0 +1,21 @@
+[build-system]
+requires = ["poetry-core~=1.8"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+pandas = "~=2.2"
+python = "~=3.10"
+yfinance = "~=0.2"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "~=0.6"
+
+
+[tool.ruff.lint]
+select = ["COM", "I"]
+ignore = ["E731"]
+isort.lines-after-imports = 2

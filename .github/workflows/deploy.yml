@@ -1,0 +1,58 @@
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+name: Deploy
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    env:
+      OBSERVABLE_TELEMETRY_DISABLE: true
+      SENTRY_RELEASE: ${{ github.sha }}
+      SENTRY_ENVIRONMENT: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+      SENTRY_PUBLIC_KEY: ${{ vars.SENTRY_PUBLIC_KEY }}
+
+    defaults:
+      run:
+        working-directory: site
+
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: pipx install poetry~=1.8
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: poetry
+          cache-dependency-path: site/poetry.lock
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache-dependency-path: site/package-lock.json
+
+      - run: poetry install
+      - run: poetry run npm ci --omit=dev
+      - run: poetry run npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          projectName: marketlab
+          workingDirectory: site
+          directory: dist
+          gitHubToken: ${{ github.token }}

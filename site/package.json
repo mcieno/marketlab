@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "observable build",
+    "dev": "observable preview --host=0.0.0.0",
+    "fmt": "prettier --write . && ruff check --fix --show-fixes",
+    "lint": "prettier --check . && ruff check",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "@observablehq/framework": "^1.12.0",
+    "d3-dsv": "^3.0.1",
+    "d3-time-format": "^4.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.1",
+    "prettier": "^3.3.3",
+    "wrangler": "^3.80.4"
+  }
+}

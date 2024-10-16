@@ -20,6 +20,8 @@ export default {
     <meta name="description" content="Boring tools for the data-savvy retail investor">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://repository-images.githubusercontent.com/872285137/5303ed90-c515-462a-9690-ecd7e1ab5509">
+    <meta name="twitter:image" content="https://repository-images.githubusercontent.com/872285137/5303ed90-c515-462a-9690-ecd7e1ab5509">
 
     <script
       src="https://js-de.sentry-cdn.com/${SentryPublicKey}.min.js"

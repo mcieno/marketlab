@@ -41,6 +41,10 @@ async function fetchTickerDataFromYahooFinance(ticker) {
     return null;
   }
 
+  if (!(data.chart.result[0].timestamp instanceof Array)) {
+    return null;
+  }
+
   if (data.chart.result[0].timestamp.length === 0) {
     return null;
   }

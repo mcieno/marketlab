@@ -50,7 +50,22 @@ const uploadedFile = view(
 setData(uploadedFile.csv({ typed: true }));
 ```
 
-... or simply choose some [Yahoo Finance](https://finance.yahoo.com/lookup/) tickers:
+&hellip; or simply choose some [Yahoo Finance](https://finance.yahoo.com/lookup/) tickers:
+
+<div class="tip">
+  <p>Some tickers are ambigous and require you to specify the exchange.</p>
+
+  <p>
+    For example, to get data for <a href="https://www.justetf.com/en/etf-profile.html?isin=IE00BK5BQT80">VWCE</a>
+    you should write <strong><code>VWCE.MI</code></strong> for <em>Borsa Italiana</em>,
+    <strong><code>VWCE.DE</code></strong> for <em>XETRA</em>, and so on&hellip;
+  </p>
+
+  <p>
+    Use the <a href="https://finance.yahoo.com/lookup/">Yahoo Finance search</a>
+    to find out the exact ticker.
+  </p>
+</div>
 
 ```js
 const tickers = view(

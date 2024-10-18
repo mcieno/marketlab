@@ -48,7 +48,7 @@ export function dailyPrices2rollingReturns(prices, period) {
 
   Object.entries(groups).forEach(([symbol, prices]) => {
     if (period >= prices.length) {
-      throw new Error("period too large", {
+      throw new Error("rolling window size too large", {
         cause: { period, symbol, prices },
       });
     }
@@ -74,7 +74,23 @@ export function dailyPrices2rollingReturns(prices, period) {
  * @returns {Plot.plot}
  */
 export function chartRollingReturns(prices, period, { width }) {
-  const returns = dailyPrices2rollingReturns(prices, period);
+  let returns;
+  try {
+    returns = dailyPrices2rollingReturns(prices, period);
+  } catch (reason) {
+    console.error(reason);
+    return Plot.plot({
+      width,
+      marks: [
+        Plot.tip([reason.toString()], {
+          anchor: "middle",
+          frameAnchor: "middle",
+          fill: "color-mix(in srgb, var(--theme-red), var(--theme-background) 70%)",
+        }),
+      ],
+    });
+  }
+
   return Plot.plot({
     width,
     title: `Rolling returns at ${Math.floor(period / 365)} years and ${period % 365} days`,
@@ -114,7 +130,22 @@ export function chartRollingReturnsDistribution(
   period,
   { width, cumulative },
 ) {
-  const returns = dailyPrices2rollingReturns(prices, period);
+  let returns;
+  try {
+    returns = dailyPrices2rollingReturns(prices, period);
+  } catch (reason) {
+    console.error(reason);
+    return Plot.plot({
+      width,
+      marks: [
+        Plot.tip([reason.toString()], {
+          anchor: "middle",
+          frameAnchor: "middle",
+          fill: "color-mix(in srgb, var(--theme-red), var(--theme-background) 70%)",
+        }),
+      ],
+    });
+  }
   const transform = binConfig =>
     Plot.mapY(
       counts => counts,

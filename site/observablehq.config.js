@@ -32,7 +32,29 @@ export default {
         Sentry.init({
           release: ${JSON.stringify(SentryRelease)},
           environment: ${JSON.stringify(SentryEnvironment)},
+          tracesSampleRate: 1.0,
+          profilesSampleRate: 1.0,
         });
+        Sentry.lazyLoadIntegration("browserProfilingIntegration").then(
+          (integration) => {
+            Sentry.addIntegration(integration());
+          },
+        );
+        Sentry.lazyLoadIntegration("contextLinesIntegration").then(
+          (integration) => {
+            Sentry.addIntegration(integration());
+          },
+        );
+        Sentry.lazyLoadIntegration("extraErrorDataIntegration").then(
+          (integration) => {
+            Sentry.addIntegration(integration());
+          },
+        );
+        Sentry.lazyLoadIntegration("httpClientIntegration").then(
+          (integration) => {
+            Sentry.addIntegration(integration());
+          },
+        );
       });
     </script>
     <script type="text/javascript">

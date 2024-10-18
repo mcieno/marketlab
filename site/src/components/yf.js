@@ -49,7 +49,16 @@ async function fetchTickerDataFromYahooFinance(ticker) {
     return null;
   }
 
-  await cache.put(endpoint, response);
+  try {
+    await cache.put(endpoint, response.clone());
+  } catch (reason) {
+    console.warn(reason);
+    // Retry in the background and silently fail
+    caches
+      .delete(CACHE_NAME)
+      .then(() => caches.open(CACHE_NAME))
+      .then(cache => cache.put(endpoint, response.clone()));
+  }
 
   return data;
 }

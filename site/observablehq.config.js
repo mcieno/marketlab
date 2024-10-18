@@ -12,7 +12,7 @@ export default {
   theme: ["parchment", "sun-faded"],
   toc: true,
 
-  head: `
+  head: ({ title }) => `
     <link rel="icon" type="image/svg+xml" href="/marketlab.svg" />
     <link rel="icon" type="image/png" href="/marketlab.png">
     <link rel="apple-touch-icon" href="/marketlab.png">
@@ -55,11 +55,19 @@ export default {
             Sentry.addIntegration(integration());
           },
         );
+        Sentry.lazyLoadIntegration("feedbackIntegration").then(
+          (integration) => {
+            Sentry.addIntegration(integration({
+              autoInject: ${JSON.stringify(!!title)},
+              showName: false,
+            }));
+          },
+        );
       });
     </script>
     <script type="text/javascript">
       var _iub = _iub || [];
-      _iub.csConfiguration = {"siteId":2655786,"cookiePolicyId":91033107,"lang":"en","storage":{"useSiteId":true}};
+      _iub.csConfiguration = {"siteId":2655786,"cookiePolicyId":91033107,"lang":"en","storage":{"useSiteId":true}, floatingPreferencesButtonDisplay: "anchored-top-right"};
     </script>
     <script type="text/javascript" rel="external noopener noreferrer" src="//cs.iubenda.com/autoblocking/2655786.js"></script>
     <script type="text/javascript" rel="external noopener noreferrer" src="//cdn.iubenda.com/cs/gpp/stub.js"></script>
@@ -110,6 +118,12 @@ export default {
       </a>
     </strong>
     &mdash;
-    <a href="https://www.iubenda.com/privacy-policy/91033107" rel="external noopener noreferrer" target="_blank">Privacy Policy</a>
+    <a href="https://www.iubenda.com/privacy-policy/91033107" rel="external noopener noreferrer" target="_blank">Privacy Policy</a>,
+    <a href="#privacy-settings" onclick='event.preventDefault(); document.querySelector("button.iubenda-tp-btn.iubenda-cs-preferences-link").click();'>Privacy settings</a>
+    <style>
+      button.iubenda-tp-btn.iubenda-cs-preferences-link {
+        display: none !important;
+      }
+    </style>
   `,
 };

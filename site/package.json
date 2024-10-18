@@ -2,7 +2,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "observable build",
+    "build": "observable build && cp -rTv static dist",
     "dev": "observable preview --host=0.0.0.0",
     "fmt": "prettier --write . && ruff check --fix --show-fixes",
     "lint": "prettier --check . && ruff check",

@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /_file/
+Disallow: /_import/
+Disallow: /_npm/
+Disallow: /_observablehq/

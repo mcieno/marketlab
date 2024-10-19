@@ -2,7 +2,7 @@
   <img
     alt="The MarketLab logo; i.e., a muscular bull doing science experiments"
     height="250"
-    src="./site/src/marketlab.svg"
+    src="./site/src/assets/marketlab.svg"
   >
 
   MarketLab

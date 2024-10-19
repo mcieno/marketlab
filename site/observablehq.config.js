@@ -13,9 +13,9 @@ export default {
   toc: true,
 
   head: ({ title }) => `
-    <link rel="icon" type="image/svg+xml" href="/marketlab.svg" />
-    <link rel="icon" type="image/png" href="/marketlab.png">
-    <link rel="apple-touch-icon" href="/marketlab.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/marketlab.svg" />
+    <link rel="icon" type="image/png" href="/assets/marketlab.png">
+    <link rel="apple-touch-icon" href="/assets/marketlab.png">
 
     <meta name="description" content="Boring tools for the data-savvy retail investor">
     <meta property="og:type" content="website">

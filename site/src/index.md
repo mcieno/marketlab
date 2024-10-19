@@ -3,7 +3,7 @@ toc: false
 ---
 
 <hgroup>
-  <img alt="The MarketLab logo; i.e., a muscular bull doing science experiments" src="marketlab.svg">
+  <img alt="The MarketLab logo; i.e., a muscular bull doing science experiments" src="/assets/marketlab.svg">
   <h1>MarketLab</h1>
   <h2>Boring tools for the data-savvy retail investor</h2>
 </hgroup>

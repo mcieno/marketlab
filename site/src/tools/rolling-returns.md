@@ -214,6 +214,9 @@ Let's now use the set of profits/losses to compute a probability distribution of
 the expected returns after holding for
 ${Math.floor(period / 365)} years and ${period % 365} days.
 
+<div class="grid grid-cols-1">
+  <div class="card">
+
 ```js
 let cumulative = view(Inputs.toggle({ label: "Cumulative", value: false }));
 ```
@@ -222,8 +225,7 @@ let cumulative = view(Inputs.toggle({ label: "Cumulative", value: false }));
 import { chartRollingReturnsDistribution } from "/components/returns.js";
 ```
 
-<div class="grid grid-cols-1">
-  <div class="card">
-    ${resize((width) => chartRollingReturnsDistribution(prices, period, { width, cumulative }))}
+${resize((width) => chartRollingReturnsDistribution(prices, period, { width, cumulative }))}
+
   </div>
 </div>

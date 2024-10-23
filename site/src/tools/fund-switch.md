@@ -33,8 +33,8 @@ const exampleGainOrLoss = (exampleAmount * gain) / 100;
 
 A capital ${gain >= 0 ? "gain" : "loss"} of <strong>${d3.format("+.2\%")(gain / 100)}</strong>
 means that if you invested ${d3.format(",.0f")(exampleAmount)}€ you'd now be
-standing on ${d3.format(".2f")(exampleAmount + exampleGainOrLoss)}€, with an
-unrealized ${gain >= 0 ? "gain" : "loss"} of ${d3.format("+.2f")(exampleGainOrLoss)}€.
+standing on ${d3.format(",.2f")(exampleAmount + exampleGainOrLoss)}€, with an
+unrealized ${gain >= 0 ? "gain" : "loss"} of ${d3.format("+,.2f")(exampleGainOrLoss)}€.
 
 ```js
 const cgt = view(
@@ -43,6 +43,12 @@ const cgt = view(
     value: 26,
     step: 0.5,
     label: "Capital gain tax (%)",
+  }),
+);
+const canDeductLosses = view(
+  Inputs.toggle({
+    label: "Capital losses can be used as deductions",
+    value: true,
   }),
 );
 ```
@@ -142,7 +148,10 @@ If you remain in the current fund, after ${tex`\Delta`} days the gross and net
 
 ```tex
 \text{Net} = \text{Gross}
-  - ${d3.format(".2f")(cgt)}\% \cdot \max{\left(0, \text{Gross} - \mathcal{M} \right)}
+  - ${d3.format(".2f")(cgt)}\% \cdot \max{\biggl\lbrace
+    0,\;
+    \text{Gross} - \mathcal{M}
+  \biggr\rbrace}
 ```
 
 ## Future capital if switching
@@ -185,10 +194,14 @@ in the desired fund would be:
 ```tex
 \text{Net} =
   \text{Gross}
-    - ${d3.format(".2f")(cgt)}\% \cdot \max{\left(
-      0,
-      \text{Gross} - \mathcal{M} \cdot ${d3.format(".4f")(remainingAfterPurchase * (1 + gain / 100))}
-    \right)}
+    - ${d3.format(".2f")(cgt)}\% \cdot \max{\biggl\lbrace
+      0,\;
+      \text{Gross} - \mathcal{M} \cdot ${
+        canDeductLosses
+          ? `\\max{\\bigl\\lbrace 1,\\; ${d3.format(".4f")(remainingAfterPurchase * (1 + gain / 100))} \\bigr\\rbrace}`
+          : d3.format(".4f")(remainingAfterPurchase * (1 + gain / 100))
+      }
+    \biggr\rbrace}
 ```
 
 ## Break-even
@@ -205,7 +218,13 @@ const currentNet = d =>
 const desiredNet = d =>
   desiredGross(d) -
   (cgt / 100) *
-    Math.max(0, desiredGross(d) - remainingAfterPurchase * (1 + gain / 100));
+    Math.max(
+      0,
+      desiredGross(d) -
+        (canDeductLosses
+          ? Math.max(1, remainingAfterPurchase * (1 + gain / 100))
+          : remainingAfterPurchase * (1 + gain / 100)),
+    );
 const currentNetAfterExitFees = d =>
   Math.round(1e8 * currentNet(d) * (1 - current.fee / 100)) / 1e8;
 const desiredNetAfterExitFees = d =>
@@ -248,7 +267,7 @@ ${
   found
     ? html`It would take <strong>&thickapprox;${(best / 365).toFixed(1)} years</strong> to break even.`
     : current.agr === desired.agr
-      ? gain * cgt <= 0 && current.fee === 0 && desired.fee === 0 && desired.exit === 0
+      ? gain * cgt <= 0 && canDeductLosses && current.fee === 0 && desired.fee === 0 && desired.exit === 0
         ? html`The funds perform identically and switching would not incur in any taxes/fees. It would make <strong>no difference</strong>.`
         : html`The funds perform identically, but switching would incur in taxes/fees. You will <strong>never</strong> break even and forever be <strong>worse</strong>.`
       : current.agr > desired.agr
@@ -260,19 +279,19 @@ ${
 
 ```js
 const size = 1_000;
-const step = (found ? Math.min(best * 2, maxSearch) : maxSearch) / size;
+const step = (found ? Math.min(best * 3, maxSearch) : maxSearch) / size;
 
 const today = new Date();
 const breakeven = found ? new Date(today.getTime() + best * 86_400_000) : null;
 const prices = Array.from(new Array(size)).flatMap((_, i) => [
   {
     Date: new Date(today.getTime() + i * step * 86_400_000),
-    Price: currentNetAfterExitFees(i * step),
+    Price: exampleAmount * currentNetAfterExitFees(i * step),
     Fund: "Current",
   },
   {
     Date: new Date(today.getTime() + i * step * 86_400_000),
-    Price: desiredNetAfterExitFees(i * step),
+    Price: exampleAmount * desiredNetAfterExitFees(i * step),
     Fund: "Desired",
   },
 ]);
@@ -283,6 +302,7 @@ function chartBreakeven(prices, breakeven, { width, scale }) {
   return Plot.plot({
     width,
     title: "Future net capital and break-even",
+    subtitle: `Expected growth of capital (after taxes and exit fees) given an original investment of ${d3.format(",.0f")(exampleAmount)} and a current capital ${gain >= 0 ? "gain" : "loss"} of ${d3.format("+.2%")(gain / 100)}.`,
     x: { label: "Date" },
     y: { label: "Net capital (after exit fees)", type: scale, grid: true },
     color: { legend: true },
@@ -296,7 +316,7 @@ function chartBreakeven(prices, breakeven, { width, scale }) {
         tip: {
           format: {
             x: d3.utcFormat("%Y-%m-%d"),
-            y: d3.format(".2f"),
+            y: d3.format(",.2f"),
           },
         },
       }),

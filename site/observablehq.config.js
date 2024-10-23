@@ -121,6 +121,9 @@ export default {
     <a href="https://www.iubenda.com/privacy-policy/91033107" rel="external noopener noreferrer" target="_blank">Privacy Policy</a>,
     <a href="#privacy-settings" onclick='event.preventDefault(); document.querySelector("button.iubenda-tp-btn.iubenda-cs-preferences-link").click();'>Privacy settings</a>
     <style>
+      .katex-display {
+        overflow-x: scroll;
+      }
       button.iubenda-tp-btn.iubenda-cs-preferences-link {
         display: none !important;
       }

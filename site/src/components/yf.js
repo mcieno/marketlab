@@ -5,9 +5,10 @@ const CACHE_NAME = "mktchf-yf";
 
 /**
  * @param {string} ticker
+ * @param {(any) => void)} alert
  * @returns {Promise<Record<string, any> | null>}
  */
-async function fetchTickerDataFromYahooFinance(ticker) {
+async function fetchTickerDataFromYahooFinance(ticker, alert = console.error) {
   const cache = await caches.open(CACHE_NAME);
 
   // Custom endpoint because CORS
@@ -24,9 +25,18 @@ async function fetchTickerDataFromYahooFinance(ticker) {
       response = await fetch(endpoint);
     } catch (error) {
       if (!response) {
+        alert(`
+Yahoo Finance API returned an error for ticker "${ticker}":
+
+    ${error.toLocaleString()}
+
+Try again later?
+`);
         throw error;
       }
+
       // It's better to serve outdated data then than throwing an error.
+      Sentry?.captureException(error);
       console.error(error);
     }
   }
@@ -67,22 +77,39 @@ async function fetchTickerDataFromYahooFinance(ticker) {
  * Downloads historical prices for the given ticker from Yahoo Finance.
  *
  * @param {string} ticker
+ * @param {(any) => void)} alert
  * @returns {Promise<(Record<string, number> & { Date: Date })[]>}
  */
-export async function download(tickers) {
+export async function download(tickers, alert = console.error) {
   /** @type {Map<string, Record<string, number>>} */
   const dataset = new Map();
   /** @type {Set<string>} */
   const symbols = new Set();
 
   for (const ticker of tickers) {
-    const data = await fetchTickerDataFromYahooFinance(ticker);
+    const data = await fetchTickerDataFromYahooFinance(ticker, alert);
     if (data === null) {
+      alert(`
+Failed to fetch data for ticker "${ticker}".
+
+Make sure you didn't forget the exchange identifier (e.g. "${ticker}.MI" or "${ticker}.DE").
+
+If you think this is a bug, please report it.
+`);
+      Sentry?.captureMessage(`Failed to fetch data for ticker "${ticker}"`);
       continue;
     }
 
     const symbol = data.chart.result[0].meta.symbol;
     if (!symbol || symbol === "Date") {
+      Sentry?.captureException(
+        `Unexpected response from Yahoo Finance for ticker "${ticker}"`,
+      );
+      alert(`
+Unexpected response from Yahoo Finance for ticker "${ticker}".
+
+This is likely a bug and was reported.
+`);
       continue;
     }
 

@@ -94,7 +94,13 @@ import { download } from "/components/yf.js";
 view(
   Inputs.button("Fetch from Yahoo Finance", {
     value: null,
-    reduce: async () => setData(await download(tickers.filter(t => !!t))),
+    reduce: async () =>
+      setData(
+        await download(
+          tickers.filter(t => !!t),
+          window.alert,
+        ),
+      ),
   }),
 );
 ```

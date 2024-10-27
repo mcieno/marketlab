@@ -86,13 +86,13 @@ export async function download(tickers, alert = console.error) {
   /** @type {Set<string>} */
   const symbols = new Set();
 
-  for (const ticker of tickers) {
+  for (const ticker of tickers.map(t => t.toUpperCase())) {
     const data = await fetchTickerDataFromYahooFinance(ticker, alert);
     if (data === null) {
       alert(`
-Failed to fetch data for ticker "${ticker}".
+Data for ticker "${ticker}" was not found on Yahoo Finance.
 
-Make sure you didn't forget the exchange identifier (e.g. "${ticker}.MI" or "${ticker}.DE").
+Make sure you input a valid ticker and you didn't forget the exchange identifier (e.g. "${ticker}.MI" or "${ticker}.DE").
 
 If you think this is a bug, please report it.
 `);

@@ -12,7 +12,7 @@ python = "~=3.10"
 yfinance = "~=0.2"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "~=0.6"
+ruff = "~=0.7"
 
 
 [tool.ruff.lint]

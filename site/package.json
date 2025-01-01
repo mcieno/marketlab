@@ -14,8 +14,8 @@
     "d3-time-format": "^4.1.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.49.0",
-    "prettier": "^3.4.1",
-    "wrangler": "^3.91.0"
+    "@playwright/test": "^1.49.1",
+    "prettier": "^3.4.2",
+    "wrangler": "^3.99.0"
   }
 }

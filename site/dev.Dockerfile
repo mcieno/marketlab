@@ -1,7 +1,7 @@
-FROM node:20
+FROM node:22
 
 RUN set -eu \
-    && npm i -g npm@10 \
+    && npm i -g npm@11 \
     && npm i -g @playwright/test@1 \
     && playwright install-deps chromium
 

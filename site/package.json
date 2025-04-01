@@ -16,6 +16,6 @@
   "devDependencies": {
     "@playwright/test": "^1.50.1",
     "prettier": "^3.5.3",
-    "wrangler": "^3.111.0"
+    "wrangler": "^4.6.0"
   }
 }

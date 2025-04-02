@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: pipx install poetry~=1.8
+      - run: pipx install poetry~=2.1
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"

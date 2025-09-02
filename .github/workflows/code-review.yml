@@ -27,7 +27,7 @@ jobs:
         working-directory: site
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - run: pipx install poetry~=2.1
       - uses: actions/setup-python@v5
@@ -54,7 +54,7 @@ jobs:
         working-directory: site
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: actions/setup-node@v4
         with:
@@ -73,7 +73,7 @@ jobs:
         working-directory: site
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - run: pipx install poetry~=2.1
       - uses: actions/setup-python@v5
@@ -100,7 +100,7 @@ jobs:
         working-directory: site
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - run: pipx install poetry~=2.1
       - uses: actions/setup-python@v5

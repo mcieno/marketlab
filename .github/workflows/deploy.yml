@@ -30,15 +30,15 @@ jobs:
       deployments: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - run: pipx install poetry~=2.1
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
           cache: poetry
           cache-dependency-path: site/poetry.lock
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
           cache-dependency-path: site/package-lock.json

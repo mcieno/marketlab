@@ -1,5 +1,5 @@
 name = "marketlab"
-compatibility_date = "2024-10-04"
+compatibility_date = "2025-11-11"
 compatibility_flags = ["nodejs_compat"]
 
 pages_build_output_dir = "dist"

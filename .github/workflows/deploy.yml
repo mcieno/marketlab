@@ -32,27 +32,25 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - run: pipx install poetry~=2.1
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.13"
-          cache: poetry
-          cache-dependency-path: site/poetry.lock
+          enable-cache: true
+
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
           cache-dependency-path: site/package-lock.json
 
-      - run: poetry install
-      - run: poetry run npm ci --omit=dev
-      - run: poetry run npm run build
+      - run: uv sync --frozen
+      - run: uv run npm ci --omit=dev
+      - run: uv run npm run build
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          projectName: marketlab
           workingDirectory: site
-          directory: dist
-          gitHubToken: ${{ github.token }}
+          command: |
+            pages functions build --outdir=./dist/worker/
+            pages deploy

@@ -1,19 +1,16 @@
-[build-system]
-requires = ["poetry-core~=2.1"]
-build-backend = "poetry.core.masonry.api"
+[project]
+name = "MarketLab"
+dynamic = ["version"]
+requires-python = ">=3.14"
+dependencies = [
+    "pandas>=2.3.3",
+    "yfinance>=0.2.66",
+]
 
-
-[tool.poetry]
-package-mode = false
-
-[tool.poetry.dependencies]
-pandas = "~=2.2"
-python = "~=3.10"
-yfinance = "~=0.2"
-
-[tool.poetry.group.dev.dependencies]
-ruff = "~=0.11"
-
+[dependency-groups]
+dev = [
+    "ruff>=0.14.4",
+]
 
 [tool.ruff.lint]
 select = ["COM", "I"]

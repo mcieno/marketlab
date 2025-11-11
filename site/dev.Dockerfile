@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM node:24-bookworm
 
 RUN set -eu \
@@ -7,9 +8,9 @@ RUN set -eu \
 
 USER node
 
-RUN set -eu \
-    && curl -sSL https://install.python-poetry.org | python3 -
+COPY --from=ghcr.io/astral-sh/uv:debian /usr/local/bin/uv /usr/local/bin/uv
 
+ENV UV_LINK_MODE copy
 ENV PATH $PATH:/home/node/.local/bin
 
-ENTRYPOINT ["poetry", "run"]
+ENTRYPOINT ["uv", "run"]

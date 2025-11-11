@@ -9,13 +9,13 @@
     "test": "playwright test"
   },
   "dependencies": {
-    "@observablehq/framework": "^1.13.2",
+    "@observablehq/framework": "^1.13.3",
     "d3-dsv": "^3.0.1",
     "d3-time-format": "^4.1.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.51.1",
-    "prettier": "^3.5.3",
-    "wrangler": "^4.6.0"
+    "@playwright/test": "^1.56.1",
+    "prettier": "^3.6.2",
+    "wrangler": "^4.47.0"
   }
 }

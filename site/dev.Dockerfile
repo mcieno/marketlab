@@ -1,4 +1,4 @@
-FROM node:22
+FROM node:24-bookworm
 
 RUN set -eu \
     && npm i -g npm@11 \
